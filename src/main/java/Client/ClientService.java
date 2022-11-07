@@ -1,4 +1,5 @@
 package Client;
+
 import Database.Database;
 
 import java.sql.*;
@@ -14,17 +15,17 @@ public class ClientService {
     private String listAll = "SELECT id, name FROM client GROUP BY id";
 
     public long create(String name) throws SQLException {
-            long primkey = 0;
-            Client client = new Client();
-            PreparedStatement pstmt = Database.getInstance().getConnection()
-                    .prepareStatement(createClient, 1);
-            pstmt.setString(1, name);
-            if (pstmt.executeUpdate() > 0) {
-                ResultSet generatedKeys = pstmt.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    primkey = generatedKeys.getInt(1);
-                }
+        long primkey = 0;
+        Client client = new Client();
+        PreparedStatement pstmt = Database.getInstance().getConnection()
+                .prepareStatement(createClient, 1);
+        pstmt.setString(1, name);
+        if (pstmt.executeUpdate() > 0) {
+            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                primkey = generatedKeys.getInt(1);
             }
+        }
         return primkey;
     }
 
@@ -50,7 +51,7 @@ public class ClientService {
         ps.executeUpdate();
     }
 
-    public  void deleteById(long id) throws SQLException {
+    public void deleteById(long id) throws SQLException {
         PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(deleteById);
         ps.setLong(1, id);
         ps.executeUpdate();
@@ -58,11 +59,10 @@ public class ClientService {
 
     public List<Client> listAll() throws SQLException {
         PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(listAll);
-        List<Client> result = null;
+        List<Client> result = new ArrayList<>();
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Client client = new Client();
-                result = new ArrayList<>();
                 client.setId(rs.getLong("id"));
                 client.setName(rs.getString("name"));
                 result.add(client);
