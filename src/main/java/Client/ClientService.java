@@ -7,6 +7,7 @@ import java.util.List;
 
 public class ClientService {
     private String createClient = "INSERT INTO client (name) VALUES (?)";
+    private String readMaxId = "SELECT MAX (id) AS maxId FROM client";
     private String getById = "SELECT id, name FROM client WHERE id =?";
     private String updateName = "UPDATE CLIENT SET NAME=? WHERE ID=?";
     private String deleteById = "DELETE FROM CLIENT WHERE ID = ?";
@@ -35,8 +36,10 @@ public class ClientService {
             if (!rs.next()) {
                 return null;
             }
+            client.setId(id);
             client.setName(rs.getString("name"));
-            return (client.getName());
+
+            return (client.toString());
         }
     }
 
@@ -68,5 +71,30 @@ public class ClientService {
         return result;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
