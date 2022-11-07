@@ -35,10 +35,8 @@ public class ClientService {
             if (!rs.next()) {
                 return null;
             }
-            client.setId(id);
             client.setName(rs.getString("name"));
-
-            return (client.toString());
+            return (client.getName());
         }
     }
 
