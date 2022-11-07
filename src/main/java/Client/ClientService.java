@@ -2,32 +2,30 @@ package Client;
 import Database.Database;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientService {
     private String createClient = "INSERT INTO client (name) VALUES (?)";
     private String readMaxId = "SELECT MAX (id) AS maxId FROM client";
     private String getById = "SELECT id, name FROM client WHERE id =?";
-    private   String updateName = "UPDATE CLIENT SET NAME=? WHERE ID=?";
+    private String updateName = "UPDATE CLIENT SET NAME=? WHERE ID=?";
     private String deleteById = "DELETE FROM CLIENT WHERE ID = ?";
-    private   String listAll = "SELECT id, name FROM client GROUP BY id";
+    private String listAll = "SELECT id, name FROM client GROUP BY id";
 
     public long create(String name) throws SQLException {
-        PreparedStatement statement = Database.getInstance().getConnection().prepareStatement(createClient);
-        statement.setString(1, name);
-        int rowsInserted = statement.executeUpdate();
-        if (rowsInserted > 0) {
-            System.out.println("A new user was inserted successfully!");
-        }
-        long id;
-        try (PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(readMaxId);
-
-             ResultSet rs = ps.executeQuery()) {
-            rs.next();
-            id = rs.getLong("maxId");
-        }
-        System.out.println("id = " + id);
-        return id;
+            long primkey = 0;
+            Client client = new Client();
+            PreparedStatement pstmt = Database.getInstance().getConnection()
+                    .prepareStatement(createClient, 1);
+            pstmt.setString(1, name);
+            if (pstmt.executeUpdate() > 0) {
+                ResultSet generatedKeys = pstmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    primkey = generatedKeys.getInt(1);
+                }
+            }
+        return primkey;
     }
 
     public String getById(long id) throws SQLException {
@@ -40,7 +38,7 @@ public class ClientService {
             }
             client.setId(id);
             client.setName(rs.getString("name"));
-            System.out.println(client.toString());
+
             return (client.toString());
         }
     }
@@ -59,17 +57,18 @@ public class ClientService {
     }
 
     public List<Client> listAll() throws SQLException {
-
         PreparedStatement ps = Database.getInstance().getConnection().prepareStatement(listAll);
+        List<Client> result = null;
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Client result = new Client();
-                result.setId(rs.getLong("id"));
-                result.setName(rs.getString("name"));
-                System.out.println(result);
+                Client client = new Client();
+                result = new ArrayList<>();
+                client.setId(rs.getLong("id"));
+                client.setName(rs.getString("name"));
+                result.add(client);
             }
         }
-        return null;
+        return result;
     }
 }
 

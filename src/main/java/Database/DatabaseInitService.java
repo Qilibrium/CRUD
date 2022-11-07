@@ -10,7 +10,6 @@ public class DatabaseInitService {
         Flyway flyway = Flyway
                 .configure()
                 .dataSource(connectionUrl, null, null).load();
-
         flyway.migrate();
     }
 
