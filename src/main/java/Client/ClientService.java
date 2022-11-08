@@ -34,7 +34,6 @@ public class ClientService {
             if (!rs.next()) {
                 return null;
             }
-            System.out.println(client.setName(rs.getString("name")));
             return client.setName(rs.getString("name"));
         }
     }
@@ -67,30 +66,4 @@ public class ClientService {
         return result;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
