@@ -24,4 +24,23 @@ public class WorkerService {
         }
         return worker.toString();
     }
+    
+public List<Worker>allWorkers() throws SQLException {
+        PreparedStatement preparedStatement = Database.getInstance().getConnection()
+                .prepareStatement("SELECT id, name, birthday, level, salary FROM worker");
+        ResultSet rs = preparedStatement.executeQuery();
+        List<Worker>result=new ArrayList<>();
+        while (rs.next()){
+            Worker worker = new Worker();
+            worker.setId(rs.getLong("id"));
+            worker.setName(rs.getString("name"));
+            worker.setBirthday(rs.getDate("birthday"));
+            worker.setLevel(rs.getString("level"));
+            worker.setSalary(rs.getInt("salary"));
+            result.add(worker);
+        }
+
+        return result;
+    }
+
 }
