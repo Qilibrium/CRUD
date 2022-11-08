@@ -21,11 +21,7 @@ public class WorkerService {
             worker.setBirthday(rs.getDate("birthday"));
             worker.setLevel(rs.getString("level"));
             worker.setSalary(rs.getInt("salary"));
-           // System.out.println(client.setName(rs.getString("name")));
-
-          //  return client.setName(rs.getString("name"));
         }
-        System.out.println(worker.toString());
         return worker.toString();
     }
 }
